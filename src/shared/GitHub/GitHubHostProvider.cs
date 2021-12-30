@@ -279,7 +279,6 @@ namespace GitHub
                     // Only GHES versions beyond the minimum version have the GCM OAuth application deployed
                     modes |= AuthenticationModes.OAuth;
                 }
-
                 Context.Trace.WriteLine($"GitHub Enterprise instance has version '{metaInfo.InstalledVersion}' and supports authentication schemes: {modes}");
                 return modes;
             }
