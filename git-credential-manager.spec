@@ -2,7 +2,7 @@
 
 Name: git-credential-manager
 Version: 2.0.785
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 Summary: Git Credential Manager (GCM) is a secure Git credential helper
 Url: https://github.com/GitCredentialManager/git-credential-manager
@@ -73,5 +73,8 @@ ln -s ../share/gcm-core/git-credential-manager-core %{buildroot}%{_bindir}/git-c
 
 #-- CHANGELOG -----------------------------------------------------------------#
 %changelog
+* Tue Aug 02 2022 M Hickford <mirth.hickford@gmail.com> 2.0.785-2
+- rpm spec (mirth.hickford@gmail.com)
+
 * Sun Jul 31 2022 M Hickford <mirth.hickford@gmail.com>
 -
