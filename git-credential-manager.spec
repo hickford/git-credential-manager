@@ -2,7 +2,7 @@
 
 Name: git-credential-manager
 Version: 2.0.785
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT
 Summary: A secure Git credential helper with multi-factor authentication support
 Url: https://github.com/GitCredentialManager/git-credential-manager
@@ -19,10 +19,10 @@ Git Credential Manager is a secure Git credential helper. GCM provides multi-fac
 #-- PREP, BUILD & INSTALL -----------------------------------------------------#
 %prep
 %autosetup
-dotnet restore src/shared/Git-Credential-Manager/
+dotnet restore src/shared/Git-Credential-Manager/ --packages packages
 
 %build
-dotnet publish src/shared/Git-Credential-Manager/ --configuration=Release --framework=net6.0
+dotnet publish src/shared/Git-Credential-Manager/ --configuration=Release --framework=net6.0 --no-restore
 
 %install
 mkdir -p %{buildroot}%{_datadir}/gcm-core
@@ -72,6 +72,9 @@ ln -s ../share/gcm-core/git-credential-manager-core %{buildroot}%{_bindir}/git-c
 
 #-- CHANGELOG -----------------------------------------------------------------#
 %changelog
+* Wed Aug 03 2022 M Hickford <mirth.hickford@gmail.com> 2.0.785-4
+- 
+
 * Wed Aug 03 2022 M Hickford <mirth.hickford@gmail.com> 2.0.785-3
 - tito.release.CoprReleaser (mirth.hickford@gmail.com)
 
