@@ -4,7 +4,7 @@ Name: git-credential-manager
 Version: 2.0.785
 Release: 2%{?dist}
 License: MIT
-Summary: Git Credential Manager (GCM) is a secure Git credential helper
+Summary: A secure Git credential helper with multi-factor authentication support
 Url: https://github.com/GitCredentialManager/git-credential-manager
 Source0: %{name}-%{version}.tar.gz
 
@@ -12,9 +12,7 @@ BuildRequires: dotnet-sdk-6.0
 Requires: dotnet-runtime-6.0
 
 %description
-Git Credential Manager (GCM) is a secure Git credential helper built on .NET that runs on Windows, macOS, and Linux.
-
-Compared to Git's built-in credential helpers (Windows: wincred, macOS: osxkeychain, Linux: gnome-keyring/libsecret) which provides single-factor authentication support working on any HTTP-enabled Git repository, GCM provides multi-factor authentication support for Azure DevOps, Azure DevOps Server (formerly Team Foundation Server), GitHub, Bitbucket, and GitLab.
+Git Credential Manager is a secure Git credential helper. GCM provides multi-factor authentication support for Azure DevOps, Azure DevOps Server, GitHub, Bitbucket, and GitLab.
 
 %global debug_package %{nil}
 
