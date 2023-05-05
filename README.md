@@ -115,6 +115,10 @@ We're [MIT][gcm-license] licensed.
 When using GitHub logos, please be sure to follow the
 [GitHub logo guidelines][github-logos].
 
+## See also
+
+* [git-credential-oauth][git-credential-oauth] - a credential-generating helper that supports OAuth authentication
+
 [azure-devops]: https://dev.azure.com/
 [azure-devops-ssh]: https://docs.microsoft.com/en-us/azure/devops/repos/git/use-ssh-keys-to-authenticate?view=azure-devops
 [bitbucket]: https://bitbucket.org
@@ -124,6 +128,7 @@ When using GitHub logos, please be sure to follow the
 [dotnet]: https://dotnet.microsoft.com
 [dotnet-distributions]: https://learn.microsoft.com/en-us/dotnet/core/install/linux
 [git-credential-helper]: https://git-scm.com/docs/gitcredentials
+[git-credential-oauth]: https://github.com/hickford/git-credential-oauth
 [gcm]: https://github.com/git-ecosystem/git-credential-manager
 [gcm-coc]: CODE_OF_CONDUCT.md
 [gcm-commit-12294990]: https://github.com/git/git/commit/12294990c90e043862be9eb7eb22c3784b526340
