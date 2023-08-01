@@ -75,8 +75,6 @@ namespace Microsoft.AzureRepos
 
         public async Task<ICredential> GetCredentialAsync(InputArguments input)
         {
-            if (UsePersonalAccessTokens())
-            {
                 Uri remoteUri = input.GetRemoteUri();
                 string service = GetServiceName(remoteUri);
                 string account = GetAccountNameForCredentialQuery(input);
@@ -99,22 +97,12 @@ namespace Microsoft.AzureRepos
                 }
 
                 return credential;
-            }
-            else
-            {
-                // Include the username request here so that we may use it as an override
-                // for user account lookups when getting Azure Access Tokens.
-                var azureResult = await GetAzureAccessTokenAsync(input);
-                return new GitCredential(azureResult.AccountUpn, azureResult.AccessToken);
-            }
         }
 
         public Task StoreCredentialAsync(InputArguments input)
         {
             Uri remoteUri = input.GetRemoteUri();
 
-            if (UsePersonalAccessTokens())
-            {
                 string service = GetServiceName(remoteUri);
 
                 // We always store credentials against the given username argument for
@@ -125,14 +113,6 @@ namespace Microsoft.AzureRepos
                 _context.Trace.WriteLine($"Storing credential with service={service} account={account}...");
                 _context.CredentialStore.AddOrUpdate(service, account, input.Password);
                 _context.Trace.WriteLine("Credential was successfully stored.");
-            }
-            else
-            {
-                string orgName = UriHelpers.GetOrganizationName(remoteUri);
-                _context.Trace.WriteLine($"Signing user {input.UserName} in to organization '{orgName}'...");
-                _bindingManager.SignIn(orgName, input.UserName);
-            }
-
             return Task.CompletedTask;
         }
 
@@ -140,8 +120,6 @@ namespace Microsoft.AzureRepos
         {
             Uri remoteUri = input.GetRemoteUri();
 
-            if (UsePersonalAccessTokens())
-            {
                 string service = GetServiceName(remoteUri);
                 string account = GetAccountNameForCredentialQuery(input);
 
@@ -155,17 +133,6 @@ namespace Microsoft.AzureRepos
                 {
                     _context.Trace.WriteLine("No credential was erased.");
                 }
-            }
-            else
-            {
-                string orgName = UriHelpers.GetOrganizationName(remoteUri);
-
-                _context.Trace.WriteLine($"Signing out of organization '{orgName}'...");
-                _bindingManager.SignOut(orgName);
-
-                // Clear the authority cache in case this was the reason for failure
-                _authorityCache.EraseAuthority(orgName);
-            }
 
             return Task.CompletedTask;
         }
@@ -220,84 +187,6 @@ namespace Microsoft.AzureRepos
             _context.Trace.WriteLineSecrets("PAT created. PAT='{0}'", new object[] {pat});
 
             return new GitCredential(result.AccountUpn, pat);
-        }
-
-        private async Task<IMicrosoftAuthenticationResult> GetAzureAccessTokenAsync(InputArguments input)
-        {
-            Uri remoteUri = input.GetRemoteUri();
-            string userName = input.UserName;
-
-            // We should not allow unencrypted communication and should inform the user
-            if (StringComparer.OrdinalIgnoreCase.Equals(remoteUri.Scheme, "http"))
-            {
-                throw new Trace2Exception(_context.Trace2,
-                    "Unencrypted HTTP is not supported for Azure Repos. Ensure the repository remote URL is using HTTPS.");
-            }
-
-            Uri orgUri = UriHelpers.CreateOrganizationUri(remoteUri, out string orgName);
-
-            _context.Trace.WriteLine($"Determining Microsoft Authentication authority for Azure DevOps organization '{orgName}'...");
-            if (TryGetAuthorityFromHeaders(input.WwwAuth, out string authAuthority))
-            {
-                _context.Trace.WriteLine("Authority was found in WWW-Authenticate headers from Git input.");
-            }
-            else
-            {
-                // Try to get the authority from the cache
-                authAuthority = _authorityCache.GetAuthority(orgName);
-                if (authAuthority is null)
-                {
-                    // If there is no cached value we must query for it and cache it for future use
-                    _context.Trace.WriteLine($"No cached authority value - querying {orgUri} for authority...");
-                    authAuthority = await _azDevOps.GetAuthorityAsync(orgUri);
-                    _authorityCache.UpdateAuthority(orgName, authAuthority);
-                }
-                else
-                {
-                    _context.Trace.WriteLine("Authority was found in cache.");
-                }
-            }
-
-            _context.Trace.WriteLine($"Authority is '{authAuthority}'.");
-
-            //
-            // If the remote URI is a classic "*.visualstudio.com" host name and we have a user specified from the
-            // remote then take that as the current AAD/MSA user in the first instance.
-            //
-            // For "dev.azure.com" host names we only use the user info part of the remote when this doesn't
-            // match the Azure DevOps organization name. Our friends in Azure DevOps decided "borrow" the username
-            // part of the remote URL to include the organization name (not an actual username).
-            //
-            // If we have no specified user from the remote (or this is org@dev.azure.com/org/..) then query the
-            // user manager for a bound user for this organization, if one exists...
-            //
-            var icmp = StringComparer.OrdinalIgnoreCase;
-            if (!string.IsNullOrWhiteSpace(userName) &&
-                (UriHelpers.IsVisualStudioComHost(remoteUri.Host) ||
-                 (UriHelpers.IsAzureDevOpsHost(remoteUri.Host) && !icmp.Equals(orgName, userName))))
-            {
-                _context.Trace.WriteLine("Using username as specified in remote.");
-            }
-            else
-            {
-                _context.Trace.WriteLine($"Looking up user for organization '{orgName}'...");
-                userName = _bindingManager.GetUser(orgName);
-            }
-
-            _context.Trace.WriteLine(string.IsNullOrWhiteSpace(userName) ? "No user found." : $"User is '{userName}'.");
-
-            // Get an AAD access token for the Azure DevOps SPS
-            _context.Trace.WriteLine("Getting Azure AD access token...");
-            IMicrosoftAuthenticationResult result = await _msAuth.GetTokenAsync(
-                authAuthority,
-                GetClientId(),
-                GetRedirectUri(),
-                AzureDevOpsConstants.AzureDevOpsDefaultScopes,
-                userName);
-            _context.Trace.WriteLineSecrets(
-                $"Acquired Azure access token. Account='{result.AccountUpn}' Token='{{0}}'", new object[] {result.AccessToken});
-
-            return result;
         }
 
         internal /* for testing purposes */ static bool TryGetAuthorityFromHeaders(IEnumerable<string> headers, out string authority)
@@ -424,40 +313,6 @@ namespace Microsoft.AzureRepos
             throw new InvalidOperationException("Host is not Azure DevOps.");
         }
 
-        /// <summary>
-        /// Check if Azure DevOps Personal Access Tokens should be used or not.
-        /// </summary>
-        /// <returns>True if Personal Access Tokens should be used, false otherwise.</returns>
-        private bool UsePersonalAccessTokens()
-        {
-            // Default to using PATs except on DevBox where we prefer OAuth tokens
-            bool defaultValue = !PlatformUtils.IsDevBox();
-
-            if (_context.Settings.TryGetSetting(
-                AzureDevOpsConstants.EnvironmentVariables.CredentialType,
-                KnownGitCfg.Credential.SectionName,
-                AzureDevOpsConstants.GitConfiguration.Credential.CredentialType,
-                out string valueStr))
-            {
-                _context.Trace.WriteLine($"Azure Repos credential type override set to '{valueStr}'");
-
-                switch (valueStr.ToLowerInvariant())
-                {
-                    case AzureDevOpsConstants.PatCredentialType:
-                        return true;
-
-                    case AzureDevOpsConstants.OAuthCredentialType:
-                        return false;
-
-                    default:
-                        _context.Streams.Error.WriteLine(
-                            $"warning: unknown Azure Repos credential type '{valueStr}' - using PATs");
-                        return defaultValue;
-                }
-            }
-
-            return defaultValue;
-        }
 
         #endregion
 
