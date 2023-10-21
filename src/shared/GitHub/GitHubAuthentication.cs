@@ -70,7 +70,7 @@ namespace GitHub
 
         public async Task<string> SelectAccountAsync(Uri targetUri, IEnumerable<string> accounts)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             if (Context.Settings.IsGuiPromptsEnabled && Context.SessionManager.IsDesktopSession)
             {
@@ -150,7 +150,7 @@ namespace GitHub
                 return new AuthenticationPromptResult(modes);
             }
 
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             if (Context.Settings.IsGuiPromptsEnabled && Context.SessionManager.IsDesktopSession)
             {
@@ -347,7 +347,7 @@ namespace GitHub
 
         public async Task<string> GetTwoFactorCodeAsync(Uri targetUri, bool isSms)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             if (Context.Settings.IsGuiPromptsEnabled && Context.SessionManager.IsDesktopSession)
             {
@@ -407,7 +407,7 @@ namespace GitHub
 
         public async Task<OAuth2TokenResult> GetOAuthTokenViaBrowserAsync(Uri targetUri, IEnumerable<string> scopes, string loginHint)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             var oauthClient = new GitHubOAuth2Client(HttpClient, Context.Settings, targetUri, Context.Trace2);
 
@@ -446,7 +446,7 @@ namespace GitHub
 
         public async Task<OAuth2TokenResult> GetOAuthTokenViaDeviceCodeAsync(Uri targetUri, IEnumerable<string> scopes)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             var oauthClient = new GitHubOAuth2Client(HttpClient, Context.Settings, targetUri, Context.Trace2);
             OAuth2DeviceCodeResult dcr = await oauthClient.GetDeviceCodeAsync(scopes, CancellationToken.None);

@@ -39,7 +39,7 @@ namespace GitCredentialManager.Authentication
         {
             EnsureArgument.NotNullOrWhiteSpace(resource, nameof(resource));
 
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             // Browser requires a desktop session!
             if (!Context.SessionManager.IsDesktopSession)
@@ -177,7 +177,7 @@ namespace GitCredentialManager.Authentication
 
         public async Task<OAuth2TokenResult> GetTokenByBrowserAsync(OAuth2Client client, string[] scopes)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             // We require a desktop session to launch the user's default web browser
             if (!Context.SessionManager.IsDesktopSession)
@@ -194,7 +194,7 @@ namespace GitCredentialManager.Authentication
 
         public async Task<OAuth2TokenResult> GetTokenByDeviceCodeAsync(OAuth2Client client, string[] scopes)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             OAuth2DeviceCodeResult dcr = await client.GetDeviceCodeAsync(scopes, CancellationToken.None);
 

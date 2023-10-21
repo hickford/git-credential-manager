@@ -176,7 +176,7 @@ namespace GitCredentialManager.Authentication
                 if (result is null)
                 {
                     // If the user has disabled interaction all we can do is fail at this point
-                    ThrowIfUserInteractionDisabled();
+                    ExitIfUserInteractionDisabled();
 
                     // If we're using the OS broker then delegate everything to that
                     if (useBroker)
@@ -307,7 +307,7 @@ namespace GitCredentialManager.Authentication
 
         private async Task<bool> UseDefaultAccountAsync(string userName)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             if (Context.SessionManager.IsDesktopSession && Context.Settings.IsGuiPromptsEnabled)
             {

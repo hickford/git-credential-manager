@@ -70,7 +70,7 @@ namespace Atlassian.Bitbucket
 
         public async Task<CredentialsPromptResult> GetCredentialsAsync(Uri targetUri, string userName, AuthenticationModes modes)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             // If we don't have a desktop session/GUI then we cannot offer OAuth since the only
             // supported grant is authcode (i.e, using a web browser; device code is not supported).
@@ -251,7 +251,7 @@ namespace Atlassian.Bitbucket
 
         public async Task<OAuth2TokenResult> CreateOAuthCredentialsAsync(InputArguments input)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             var browserOptions = new OAuth2WebBrowserOptions
             {

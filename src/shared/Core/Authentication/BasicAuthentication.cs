@@ -36,7 +36,7 @@ namespace GitCredentialManager.Authentication
         {
             EnsureArgument.NotNullOrWhiteSpace(resource, nameof(resource));
 
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             if (Context.Settings.IsGuiPromptsEnabled && Context.SessionManager.IsDesktopSession)
             {

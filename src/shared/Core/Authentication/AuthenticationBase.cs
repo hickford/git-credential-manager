@@ -86,7 +86,7 @@ namespace GitCredentialManager.Authentication
             return resultDict;
         }
 
-        protected void ThrowIfUserInteractionDisabled()
+        protected void ExitIfUserInteractionDisabled()
         {
             if (!Context.Settings.IsInteractionAllowed)
             {
@@ -96,7 +96,7 @@ namespace GitCredentialManager.Authentication
                     Constants.GitConfiguration.Credential.Interactive);
 
                 Context.Trace.WriteLine($"{envName} / {cfgName} is false/never; user interactivity has been disabled.");
-                throw new Trace2InvalidOperationException(Context.Trace2, "Cannot prompt because user interactivity has been disabled.");
+                System.Environment.Exit(0);
             }
         }
 

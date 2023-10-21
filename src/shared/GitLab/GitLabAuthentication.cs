@@ -70,7 +70,7 @@ namespace GitLab
                 throw new ArgumentException(@$"Must specify at least one {nameof(AuthenticationModes)}", nameof(modes));
             }
 
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             if (Context.Settings.IsGuiPromptsEnabled && Context.SessionManager.IsDesktopSession)
             {
@@ -262,7 +262,7 @@ namespace GitLab
 
         public async Task<OAuth2TokenResult> GetOAuthTokenViaBrowserAsync(Uri targetUri, IEnumerable<string> scopes)
         {
-            ThrowIfUserInteractionDisabled();
+            ExitIfUserInteractionDisabled();
 
             var oauthClient = new GitLabOAuth2Client(HttpClient, Context.Settings, targetUri, Context.Trace2);
 
