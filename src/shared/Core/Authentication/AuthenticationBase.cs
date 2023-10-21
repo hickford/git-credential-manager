@@ -90,6 +90,7 @@ namespace GitCredentialManager.Authentication
         {
             if (!Context.Settings.IsInteractionAllowed)
             {
+                System.Environment.Exit(0);
                 string envName = Constants.EnvironmentVariables.GcmInteractive;
                 string cfgName = string.Format("{0}.{1}",
                     Constants.GitConfiguration.Credential.SectionName,
