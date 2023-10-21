@@ -345,7 +345,7 @@ namespace Atlassian.Bitbucket
             string service = GetServiceName(remoteUri);
 
             _context.Trace.WriteLine("Erasing credential...");
-            if (_context.CredentialStore.Remove(service, input.UserName))
+            if (_context.CredentialStore.Remove(service, input.UserName, input.Password))
             {
                 _context.Trace.WriteLine("Credential was successfully erased.");
             }

@@ -29,7 +29,7 @@ namespace GitCredentialManager.Tests.Objects
             Add(service, account, secret);
         }
 
-        bool ICredentialStore.Remove(string service, string account)
+        bool ICredentialStore.Remove(string service, string account, string password)
         {
             foreach (var key in _store.Keys)
             {

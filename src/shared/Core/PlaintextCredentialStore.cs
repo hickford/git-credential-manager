@@ -61,7 +61,7 @@ namespace GitCredentialManager
             SerializeCredential(credential);
         }
 
-        public bool Remove(string service, string account)
+        public bool Remove(string service, string account, string password = null)
         {
             foreach (FileCredential credential in Enumerate(service, account))
             {

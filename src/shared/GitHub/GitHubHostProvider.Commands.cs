@@ -129,7 +129,7 @@ public partial class GitHubHostProvider : ICommandProvider
             ? $"https://{GitHubConstants.GitHubBaseUrlHost}"
             : GetServiceName(url);
 
-        bool result = _context.CredentialStore.Remove(service, account);
+        bool result = _context.CredentialStore.Remove(service, account, null);
 
         if (!result)
         {

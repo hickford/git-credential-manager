@@ -183,7 +183,7 @@ namespace GitLab
             if (credential?.Account == "oauth2" && await IsOAuthTokenExpired(input.GetRemoteUri(), credential.Password))
             {
                 Context.Trace.WriteLine("Removing expired OAuth access token...");
-                Context.CredentialStore.Remove(service, credential.Account);
+                Context.CredentialStore.Remove(service, credential.Account, credential.Password);
                 credential = null;
             }
 
@@ -286,7 +286,7 @@ namespace GitLab
         public override Task EraseCredentialAsync(InputArguments input)
         {
             // delete any refresh token too
-            Context.CredentialStore.Remove(GetRefreshTokenServiceName(input), "oauth2");
+            Context.CredentialStore.Remove(GetRefreshTokenServiceName(input), "oauth2", null);
             return base.EraseCredentialAsync(input);
         }
     }

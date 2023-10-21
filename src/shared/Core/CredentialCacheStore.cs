@@ -72,7 +72,7 @@ namespace GitCredentialManager
             ).GetAwaiter().GetResult();
         }
 
-        public bool Remove(string service, string account)
+        public bool Remove(string service, string account, string password)
         {
             var input = MakeGitCredentialsEntry(service, account);
 
@@ -90,7 +90,7 @@ namespace GitCredentialManager
 
         #endregion
 
-        private Dictionary<string, string> MakeGitCredentialsEntry(string service, string account)
+        private Dictionary<string, string> MakeGitCredentialsEntry(string service, string account, string password = null)
         {
             var result = new Dictionary<string, string>();
 
@@ -98,6 +98,10 @@ namespace GitCredentialManager
             if (!string.IsNullOrEmpty(account))
             {
                 result["username"] = account;
+            }
+            if (!string.IsNullOrEmpty(password))
+            {
+                result["password"] = password;
             }
 
             return result;

@@ -171,7 +171,7 @@ namespace GitCredentialManager
 
             // Try to locate an existing credential
             Context.Trace.WriteLine($"Erasing stored credential in store with service={service} account={input.UserName}...");
-            if (Context.CredentialStore.Remove(service, input.UserName))
+            if (Context.CredentialStore.Remove(service, input.UserName, input.Password))
             {
                 Context.Trace.WriteLine("Credential was successfully erased.");
             }

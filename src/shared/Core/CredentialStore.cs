@@ -43,10 +43,10 @@ namespace GitCredentialManager
             _backingStore.AddOrUpdate(service, account, secret);
         }
 
-        public bool Remove(string service, string account)
+        public bool Remove(string service, string account, string password)
         {
             EnsureBackingStore();
-            return _backingStore.Remove(service, account);
+            return _backingStore.Remove(service, account, password);
         }
 
         #endregion

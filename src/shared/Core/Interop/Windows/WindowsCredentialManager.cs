@@ -110,7 +110,7 @@ namespace GitCredentialManager.Interop.Windows
             }
         }
 
-        public bool Remove(string service, string account)
+        public bool Remove(string service, string account, string password = null)
         {
             WindowsCredential credential = Enumerate(service, account).FirstOrDefault();
 

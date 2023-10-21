@@ -56,7 +56,7 @@ namespace GitCredentialManager.Diagnostics
             finally
             {
                 log.Append("Deleting test credential...");
-                CommandContext.CredentialStore.Remove(service, account);
+                CommandContext.CredentialStore.Remove(service, account, password);
                 log.AppendLine(" OK");
             }
 

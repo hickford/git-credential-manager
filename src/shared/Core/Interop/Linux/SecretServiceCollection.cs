@@ -198,7 +198,7 @@ namespace GitCredentialManager.Interop.Linux
             }
         }
 
-        public unsafe bool Remove(string service, string account)
+        public unsafe bool Remove(string service, string account, string password = null)
         {
             GHashTable* attributes = null;
             GError* error = null;

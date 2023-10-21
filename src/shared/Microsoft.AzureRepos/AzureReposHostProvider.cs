@@ -179,7 +179,7 @@ namespace Microsoft.AzureRepos
                 // Try to locate an existing credential
                 _context.Trace.WriteLine(
                     $"Erasing stored credential in store with service={service} account={account}...");
-                if (_context.CredentialStore.Remove(service, account))
+                if (_context.CredentialStore.Remove(service, account, null))
                 {
                     _context.Trace.WriteLine("Credential was successfully erased.");
                 }

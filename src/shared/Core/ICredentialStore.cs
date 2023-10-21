@@ -36,6 +36,6 @@ namespace GitCredentialManager
         /// <param name="service">Name of the service to match against. Use null to match all values.</param>
         /// <param name="account">Account name to match against. Use null to match all values.</param>
         /// <returns>True if the credential was deleted, false otherwise.</returns>
-        bool Remove(string service, string account);
+        bool Remove(string service, string account, string password);
     }
 }

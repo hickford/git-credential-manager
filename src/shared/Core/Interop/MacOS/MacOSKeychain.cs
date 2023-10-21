@@ -218,7 +218,7 @@ namespace GitCredentialManager.Interop.MacOS
             }
         }
 
-        public bool Remove(string service, string account)
+        public bool Remove(string service, string account, string password = null)
         {
             IntPtr query = IntPtr.Zero;
             IntPtr itemRefPtr = IntPtr.Zero;
