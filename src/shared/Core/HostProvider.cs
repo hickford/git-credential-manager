@@ -158,7 +158,7 @@ namespace GitCredentialManager
             {
                 // Add or update the credential in the store.
                 Context.Trace.WriteLine($"Storing credential with service={service} account={input.UserName}...");
-                Context.CredentialStore.AddOrUpdate(service, input.UserName, input.Password);
+                Context.CredentialStore.AddOrUpdate(service, new GitCredential(input));
                 Context.Trace.WriteLine("Credential was successfully stored.");
             }
 
@@ -171,7 +171,7 @@ namespace GitCredentialManager
 
             // Try to locate an existing credential
             Context.Trace.WriteLine($"Erasing stored credential in store with service={service} account={input.UserName}...");
-            if (Context.CredentialStore.Remove(service, input.UserName))
+            if (Context.CredentialStore.Remove(service, new GitCredential(input)))
             {
                 Context.Trace.WriteLine("Credential was successfully erased.");
             }

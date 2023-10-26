@@ -42,6 +42,8 @@ namespace GitCredentialManager
         public string Path     => GetArgumentOrDefault("path");
         public string UserName => GetArgumentOrDefault("username");
         public string Password => GetArgumentOrDefault("password");
+        public string OAuthRefreshToken => GetArgumentOrDefault("oauth_refresh_token");
+        public string PasswordExpiryUTC => GetArgumentOrDefault("password_expiry_utc");
         public IList<string> WwwAuth => GetMultiArgumentOrDefault("wwwauth");
 
         #endregion
